@@ -1,5 +1,7 @@
 package gui;
 
+import gui.menu.Menu;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
@@ -20,17 +22,17 @@ public class MainWindow {
      * event-dispatching thread.
      */
     private static void createAndShowGUI() {
-        //Create and set up the window.
+        // Create and set up the window.
         JFrame frame = new JFrame("Petrificate");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
  
-        //Create and set up the menu.
+        // Create and set up the menu.
         frame.setJMenuBar(new Menu());
  
-        //Add tabbed pane to the window.
+        // Add tabbed pane to the window.
         frame.add(new EditorTabs(), BorderLayout.CENTER);
 
-        //Display the window
+        // Display the window
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
     }
