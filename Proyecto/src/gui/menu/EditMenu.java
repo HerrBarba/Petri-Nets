@@ -4,10 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+import gui.EditorTabs;
 
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
 public class EditMenu extends JMenu implements ActionListener {
 
 	/**
@@ -20,11 +20,15 @@ public class EditMenu extends JMenu implements ActionListener {
 	private JMenuItem paste;
 	private JMenuItem cut;
 	private JMenuItem delete;
-	
+	private String Selected="";
+
+
 	public EditMenu() {
         super("Editar");
         setMnemonic(KeyEvent.VK_E);
  
+        
+        
         // Change Font menu item
         font = new JMenuItem("Fuente");
         font.setMnemonic(KeyEvent.VK_F);
@@ -44,6 +48,11 @@ public class EditMenu extends JMenu implements ActionListener {
                 KeyEvent.VK_C, ActionEvent.CTRL_MASK));
         copy.addActionListener(this);
         add(copy);
+        Selected=EditorTabs.output.getSelectedText();
+    
+  
+        
+        
  
         // Paste menu item
         paste = new JMenuItem("Pegar");
@@ -52,6 +61,8 @@ public class EditMenu extends JMenu implements ActionListener {
                 KeyEvent.VK_V, ActionEvent.CTRL_MASK));
         paste.addActionListener(this);
         add(paste);
+        EditorTabs.output.setText(Selected);
+     
         
         // Cut menu item
         cut = new JMenuItem("Cortar");
@@ -60,6 +71,19 @@ public class EditMenu extends JMenu implements ActionListener {
                 KeyEvent.VK_X, ActionEvent.CTRL_MASK));
         cut.addActionListener(this);
         add(cut);
+        Selected=EditorTabs.output.getSelectedText();
+        /*try {
+			String cutString = EditorTabs.output.getText(EditorTabs.output.getSelectionEnd(), EditorTabs.output.getText().length()-EditorTabs.output.getText(0,EditorTabs.output.getSelectionEnd()).length());
+			EditorTabs.output.setText(cutString);
+        } catch (BadLocationException ex) {
+        	System.out.println("Error"+ex);
+        	Selected="";
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}*/
+        
+        
+        
         
         // Deltte menu item
         delete = new JMenuItem("Eliminar");

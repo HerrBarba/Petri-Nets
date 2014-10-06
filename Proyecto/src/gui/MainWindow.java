@@ -15,7 +15,7 @@ import javax.swing.JFrame;
  *
  */
 public class MainWindow {
-    
+	
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
@@ -25,12 +25,12 @@ public class MainWindow {
         // Create and set up the window.
         JFrame frame = new JFrame("Petrificate");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
- 
-        // Create and set up the menu.
-        frame.setJMenuBar(new Menu());
- 
+        
         // Add tabbed pane to the window.
         frame.add(new EditorTabs(), BorderLayout.CENTER);
+        
+        // Create and set up the menu.
+        frame.setJMenuBar(new Menu());
 
         // Display the window
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);

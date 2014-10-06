@@ -16,7 +16,8 @@ public class EditorTabs extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = -2655671622457927372L;
-
+	public static JTextArea output;
+	
 	public EditorTabs() {
         super(new GridLayout(1, 1));
          
@@ -46,15 +47,18 @@ public class EditorTabs extends JPanel {
         contentPane.setOpaque(true);        
 
         //Create a scrolled text area.
-        JTextArea output = new JTextArea();
+        output = new JTextArea();
         output.setEditable(true);
         JScrollPane scrollPane = new JScrollPane(output);
+       
+        
  
         //Add the text area to the content pane.
         contentPane.add(scrollPane, BorderLayout.CENTER);
         return contentPane;
     }
     
+ 
     private JComponent makeGraphPanel(String text) {
         //Create the content-pane-to-be.
         JPanel contentPane = new JPanel(new BorderLayout());
