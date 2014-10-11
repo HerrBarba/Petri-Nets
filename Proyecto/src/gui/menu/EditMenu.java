@@ -42,59 +42,58 @@ public class EditMenu extends JMenu implements ActionListener {
         add(color);
  
         // Copy menu item
+        
         copy = new JMenuItem("Copiar");
         copy.setMnemonic(KeyEvent.VK_C);
         copy.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_C, ActionEvent.CTRL_MASK));
         copy.addActionListener(this);
         add(copy);
-        Selected=EditorTabs.output.getSelectedText();
-    
-  
-        
-        
- 
+      
         // Paste menu item
         paste = new JMenuItem("Pegar");
         paste.setMnemonic(KeyEvent.VK_V);
         paste.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_V, ActionEvent.CTRL_MASK));
         paste.addActionListener(this);
-        add(paste);
         EditorTabs.output.setText(Selected);
+        add(paste);
      
-        
         // Cut menu item
         cut = new JMenuItem("Cortar");
         cut.setMnemonic(KeyEvent.VK_U);
         cut.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_X, ActionEvent.CTRL_MASK));
         cut.addActionListener(this);
-        add(cut);
-        Selected=EditorTabs.output.getSelectedText();
-        /*try {
-			String cutString = EditorTabs.output.getText(EditorTabs.output.getSelectionEnd(), EditorTabs.output.getText().length()-EditorTabs.output.getText(0,EditorTabs.output.getSelectionEnd()).length());
-			EditorTabs.output.setText(cutString);
-        } catch (BadLocationException ex) {
-        	System.out.println("Error"+ex);
-        	Selected="";
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		}*/
+        add(cut);  
         
-        
-        
-        
-        // Deltte menu item
+        // Delete menu item
         delete = new JMenuItem("Eliminar");
         delete.setMnemonic(KeyEvent.VK_E);
         delete.addActionListener(this);
         add(delete);
 	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+			if(((JMenuItem)e.getSource())== copy)
+			{
+				Selected=EditorTabs.output.getSelectedText();
+			}
+			else if(((JMenuItem)e.getSource())== paste){
+				EditorTabs.output.setText(Selected);
+			}
+			else if(((JMenuItem)e.getSource())== cut){
+				Selected=EditorTabs.output.getSelectedText();
+			        try {
+						String cutString = EditorTabs.output.getText(EditorTabs.output.getSelectionEnd(), EditorTabs.output.getText().length()-EditorTabs.output.getText(0,EditorTabs.output.getSelectionEnd()).length());
+						EditorTabs.output.setText(cutString);
+			        } catch (BadLocationException ex) {
+			        	System.out.println("Error"+ex);
+			        	Selected="";
+						// TODO Auto-generated catch block
+						ex.printStackTrace();	
+			}
 	}
+}
 }
