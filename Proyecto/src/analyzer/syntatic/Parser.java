@@ -11,26 +11,17 @@ public class Parser {
 	private static Stack<String> stack = new Stack<String>();
 	private static HashMap<String, Production> llTable = new HashMap<String, Production>();
 	private Parser() {}
-	/*void createTable() {
-		llTable.put("Eid", new Production("E", new String[] {"T", "E'"}));
-		llTable.put("Tid", new Production("T", new String[] {"F", "T'"}));
-		llTable.put("Fid", new Production("F", new String[] {"id"}));
-		llTable.put("E'+", new Production("E'", new String[] {"+", "T", "E'"}));
-		llTable.put("T'+", new Production("T'", new String[] {"&"}));
-		llTable.put("T'*", new Production("T'", new String[] {"*", "F", "T'"}));
-		llTable.put("E(", new Production("E", new String[] {"T", "E'"}));
-		llTable.put("T(", new Production("T", new String[] {"F", "T'"}));
-		llTable.put("F(", new Production("F", new String[] {"(", "E", ")"}));
-		llTable.put("E')", new Production("E'", new String[] {"&"}));
-		llTable.put("T')", new Production("T'", new String[] {"&"}));
-		llTable.put("E'$", new Production("E'", new String[] {"&"}));
-		llTable.put("T'$", new Production("T'", new String[] {"&"}));
-	}*/
 	
 	private static void createTable() {
 		llTable.put("SopenTag", new Production("S", new String[] {"S'", "S"}));
-		llTable.put("S'openTag", new Production("S'", new String[] {"openTag", "tag", "A", "slash", "closeTag"}));
-		llTable.put("Aslash", new Production("A", new String[] {"&"}));		
+		llTable.put("S'openTag", new Production("S'", new String[] {"openTag", "T", "A", "E"}));
+		llTable.put("EcloseTag", new Production("E", new String[] {"closeTag", "S", "openSlashTag", "T", "closeTag"}));
+		llTable.put("AcloseTag", new Production("A", new String[] {"&"}));
+		llTable.put("SopenSlashTag", new Production("S", new String[] {"&"}));		
+		llTable.put("EcloseSlashTag", new Production("E", new String[] {"closeSlashTag"}));		
+		llTable.put("AcloseSlashTag", new Production("A", new String[] {"&"}));		
+		llTable.put("TpetriNet", new Production("T", new String[] {"petriNet"}));		
+		llTable.put("Ttag", new Production("T", new String[] {"tag"}));		
 		llTable.put("Aattr", new Production("A", new String[] {"attr", "equals", "string", "A"}));
 		llTable.put("Smoney", new Production("S", new String[] {"&"}));
 	}
@@ -44,6 +35,7 @@ public class Parser {
 			this.rightHandSide = rightHandSide;
 		}
 		
+		@SuppressWarnings("unused")
 		private String getLeftHandSide() {
 			return leftHandSide;
 		}
@@ -52,30 +44,12 @@ public class Parser {
 			return rightHandSide;
 		}
 	}
-
-	private static List<Token> checkInitialconditions(List<Token> tokens) {
-		String open = "";
-		String close = "";
-		
-		for (int i = 0; i < 6; i++)
-			open += tokens.remove(0);
-		
-		for (int i = 0; i < 4; i++)
-			close += tokens.remove(tokens.size() - 4 + i);
-		
-		if (open.equals("openTagpetriNetattrequalsstringcloseTag") &&
-				close.equals("openTagslashpetriNetcloseTag"))
-			return tokens;
-		return null;
-	}	
 	
 	static {
 		createTable();
 	}
 	
 	public static boolean parse(List<Token> tokens) {
-		tokens = checkInitialconditions(tokens);
-		//System.out.println(tokens);
 		if (tokens == null) return false;
 		
 		stack.add("money");

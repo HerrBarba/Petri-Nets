@@ -8,7 +8,7 @@ import analyzer.syntatic.Parser;
 
 public class Compiler {
 
-	//TODO
+	//TODO finish compilation function
 	public static boolean compile() {
 		List<Token> tokens = Lexer.getTokens();
 		if (tokens.contains(Token.error)) return false;
