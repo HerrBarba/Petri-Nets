@@ -7,18 +7,21 @@ public class Lexer {
 
 	private static final String regexOpenTag = "<";
 	private static final String regexCloseTag = ">";
-	private static final String regexSlash = "/";
+	private static final String regexOpenSlashTag = "</";
+	private static final String regexCloseSlashTag = "/>";
 	private static final String regexEquals = "=";
-	private static final String regexAttr = "(name|id)";
+	private static final String regexAttr = "(name|id|color|time)";
 	private static final String regexPetriNet = "(Coloreada|P-T)";
 	private static final String regexString = "\".*\"";
-	private static final String regexTag = "(Place|Transition|Arch)";
+	private static final String regexTag = "(Place|Transition)";
 	private static final String regexTab = "[(    )\t]*";
 	private static final String regexWhitespace = "[ ]*";
 	
 	private static ArrayList<Token> lastMatchingTokens = new ArrayList<Token>();
 	private static ArrayList<LexToken> lexTokens = new ArrayList<LexToken>();
 	private static ArrayList<Token> tokens = new ArrayList<Token>();
+	
+	private Lexer() {}
 	
 	static {
 		analyze();
@@ -79,9 +82,12 @@ public class Lexer {
 
 		if (s.matches(regexCloseTag))
 			tokens.add(Token.closeTag);
+
+		if (s.matches(regexOpenSlashTag))
+			tokens.add(Token.openSlashTag);	
 		
-		if (s.matches(regexSlash))
-			tokens.add(Token.slash);		
+		if (s.matches(regexCloseSlashTag))
+			tokens.add(Token.closeSlashTag);			
 		
 		if (s.matches(regexEquals))
 			tokens.add(Token.equals);
