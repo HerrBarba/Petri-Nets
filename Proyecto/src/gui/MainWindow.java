@@ -31,6 +31,8 @@ public class MainWindow {
         
         // Create and set up the menu.
         frame.setJMenuBar(new Menu());
+        
+        
 
         // Display the window
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);

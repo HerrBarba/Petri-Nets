@@ -21,6 +21,7 @@ public class EditMenu extends JMenu implements ActionListener {
 	private JMenuItem cut;
 	private JMenuItem delete;
 	private String Selected="";
+	private String textoCopiado;
 
 
 	public EditMenu() {
@@ -78,22 +79,31 @@ public class EditMenu extends JMenu implements ActionListener {
 		// TODO Auto-generated method stub
 			if(((JMenuItem)e.getSource())== copy)
 			{
-				Selected=EditorTabs.output.getSelectedText();
+				
+				int inicio=EditorTabs.output.getSelectionStart();
+				int fin = EditorTabs.output.getSelectionEnd();
+				String s= EditorTabs.output.getText();
+				textoCopiado=s.substring(inicio, fin);
 			}
 			else if(((JMenuItem)e.getSource())== paste){
-				EditorTabs.output.setText(Selected);
+				
+				int inicio=EditorTabs.output.getSelectionStart();
+				String inicioText= EditorTabs.output.getText().substring(0, inicio);
+				String finText= EditorTabs.output.getText().substring(inicio);
+				String res= inicioText+textoCopiado+finText;
+				EditorTabs.output.setText(res);
 			}
 			else if(((JMenuItem)e.getSource())== cut){
-				Selected=EditorTabs.output.getSelectedText();
-			        try {
-						String cutString = EditorTabs.output.getText(EditorTabs.output.getSelectionEnd(), EditorTabs.output.getText().length()-EditorTabs.output.getText(0,EditorTabs.output.getSelectionEnd()).length());
-						EditorTabs.output.setText(cutString);
-			        } catch (BadLocationException ex) {
-			        	System.out.println("Error"+ex);
-			        	Selected="";
-						// TODO Auto-generated catch block
-						ex.printStackTrace();	
+				
+			int inicio= EditorTabs.output.getSelectionStart();
+			int fin=EditorTabs.output.getSelectionEnd();
+			String s=EditorTabs.output.getText();
+			textoCopiado=s.substring(inicio, fin);
+			String inicioText=EditorTabs.output.getText().substring(0, inicio);
+			String finText=EditorTabs.output.getText().substring(fin, EditorTabs.output.getText().length());
+			EditorTabs.output.setText(inicioText+finText);
+				
 			}
 	}
 }
-}
+
