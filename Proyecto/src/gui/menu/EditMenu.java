@@ -1,34 +1,53 @@
 package gui.menu;
 
+import gui.EditorTabs;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import gui.EditorTabs;
-
-import javax.swing.*;
-import javax.swing.text.BadLocationException;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 public class EditMenu extends JMenu implements ActionListener {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5295268862794155929L;
+	private JMenuItem undo;
+	private JMenuItem redo;
 	private JMenuItem font;
 	private JMenuItem color;
 	private JMenuItem copy;
 	private JMenuItem paste;
 	private JMenuItem cut;
 	private JMenuItem delete;
-	private String Selected="";
-	private String textoCopiado;
+	private String clipboard;
 
 
 	public EditMenu() {
         super("Editar");
         setMnemonic(KeyEvent.VK_E);
- 
+         
+        // Change Font menu item
+        undo = new JMenuItem("Undo");
+        undo.setMnemonic(KeyEvent.VK_U);
+        undo.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+        undo.addActionListener(this);
+        add(undo); 
         
+        // Change object color menu item
+        redo = new JMenuItem("Redo");
+        redo.setMnemonic(KeyEvent.VK_R);
+        redo.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
+        redo.addActionListener(this);
+        add(redo);
+        
+        addSeparator();
         
         // Change Font menu item
         font = new JMenuItem("Fuente");
@@ -41,9 +60,10 @@ public class EditMenu extends JMenu implements ActionListener {
         color.setMnemonic(KeyEvent.VK_L);
         color.addActionListener(this);
         add(color);
- 
-        // Copy menu item
+                
+        addSeparator();
         
+        // Copy menu item        
         copy = new JMenuItem("Copiar");
         copy.setMnemonic(KeyEvent.VK_C);
         copy.setAccelerator(KeyStroke.getKeyStroke(
@@ -57,12 +77,11 @@ public class EditMenu extends JMenu implements ActionListener {
         paste.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_V, ActionEvent.CTRL_MASK));
         paste.addActionListener(this);
-        EditorTabs.output.setText(Selected);
         add(paste);
      
         // Cut menu item
         cut = new JMenuItem("Cortar");
-        cut.setMnemonic(KeyEvent.VK_U);
+        cut.setMnemonic(KeyEvent.VK_T);
         cut.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_X, ActionEvent.CTRL_MASK));
         cut.addActionListener(this);
@@ -74,36 +93,52 @@ public class EditMenu extends JMenu implements ActionListener {
         delete.addActionListener(this);
         add(delete);
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-			if(((JMenuItem)e.getSource())== copy)
-			{
-				
-				int inicio=EditorTabs.output.getSelectionStart();
-				int fin = EditorTabs.output.getSelectionEnd();
-				String s= EditorTabs.output.getText();
-				textoCopiado=s.substring(inicio, fin);
-			}
-			else if(((JMenuItem)e.getSource())== paste){
-				
-				int inicio=EditorTabs.output.getSelectionStart();
-				String inicioText= EditorTabs.output.getText().substring(0, inicio);
-				String finText= EditorTabs.output.getText().substring(inicio);
-				String res= inicioText+textoCopiado+finText;
-				EditorTabs.output.setText(res);
-			}
-			else if(((JMenuItem)e.getSource())== cut){
-				
-			int inicio= EditorTabs.output.getSelectionStart();
-			int fin=EditorTabs.output.getSelectionEnd();
-			String s=EditorTabs.output.getText();
-			textoCopiado=s.substring(inicio, fin);
-			String inicioText=EditorTabs.output.getText().substring(0, inicio);
-			String finText=EditorTabs.output.getText().substring(fin, EditorTabs.output.getText().length());
-			EditorTabs.output.setText(inicioText+finText);
-				
-			}
+		JMenuItem item = (JMenuItem) e.getSource();
+		JTextArea textArea = EditorTabs.output;
+		
+		// Selection indexes
+		int start = textArea.getSelectionStart();
+		int end = textArea.getSelectionEnd();
+		
+		String text = textArea.getText();
+		
+		// Copy selected string
+		if (item == copy)			
+			clipboard = text.substring(start, end);
+			
+		// Paste string at cursor position
+		else if (item == paste)			
+			textArea.setText(paste(text, clipboard, start, end));
+			
+		// Delete selected string
+		else if (item == delete)
+			textArea.setText(paste(text, "", start, end));
+		
+		// Cut selected string
+		else if (item == cut) {			
+			clipboard = text.substring(start, end);
+			textArea.setText(paste(text, "", start, end));			
+		}
+	}
+	
+	private String paste(String text, String clipboard, 
+							int start, int end) {
+		
+		StringBuilder newText = new StringBuilder("");
+		
+		// Add text before selection
+		newText.append(text.substring(0, start));
+		
+		// Add selection
+		newText.append(clipboard);
+		
+		// Add text after selection
+		newText.append(text.substring(end));
+		
+		return newText.toString();
 	}
 }
 
