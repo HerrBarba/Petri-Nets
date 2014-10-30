@@ -9,11 +9,15 @@ import analyzer.syntatic.Parser;
 public class Compiler {
 
 	//TODO finish compilation function
-	public static boolean compile() {
+	public static String compile() {
 		List<Token> tokens = Lexer.getTokens();
-		if (tokens.contains(Token.error)) return false;
-		if (!Parser.parse(tokens)) return false;
-		return true;
+		String error = "Object not recognized";
+		if (tokens.contains(Token.error)) return error;
+		
+		error = Parser.parse(tokens);
+		if (error != null) return error;		
+		
+		return "Compiled Successfully";
 	}
 	
 	public static void main(String[] args) {

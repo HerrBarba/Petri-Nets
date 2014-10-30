@@ -55,10 +55,15 @@ public class Lexer {
 					lexeme += c;
 			}
 			
-			if (!lexeme.equals("$"))
+			if (!lexeme.equals("$")) {
 				tokens.add(Token.error);
+				lexTokens.add(new LexToken(lexeme,Token.error));
+			}
+			
 			lexTokens.add(new LexToken("\n", Token.line));
 		}
+		
+		s.close();
 	}
 	
 	private static Token matches(String s) {
@@ -117,12 +122,12 @@ public class Lexer {
 		return tokens;
 	}
 	
-	public static ArrayList<LexToken> getLextokens() {
+	public static ArrayList<LexToken> getLexTokens() {
 		return lexTokens;
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(getLextokens());
+		System.out.println(getLexTokens());
 	}
 }
 
