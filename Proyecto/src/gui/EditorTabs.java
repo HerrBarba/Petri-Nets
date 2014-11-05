@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 
@@ -10,13 +11,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 public class EditorTabs extends JPanel {
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = -2655671622457927372L;
-	public static JTextArea output;
+	public static JTextPane output;
 	
 	public EditorTabs() {
         super(new GridLayout(1, 1));
@@ -42,20 +47,36 @@ public class EditorTabs extends JPanel {
     }
      
     private JComponent makeTextPanel(String text) {
+    	
+    	String markup = "Questions are <font size='+1' color='blue'>a burden</font> to others,\n"  
+    			  +"answers <font size='+2' color='red'>a prison</font> for oneself."; 
         //Create the content-pane-to-be.
         JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.setOpaque(true);        
 
         //Create a scrolled text area.
-        output = new JTextArea();
+        output = new JTextPane();
         output.setEditable(true);
-        JScrollPane scrollPane = new JScrollPane(output);
-       
         
- 
+        output.setText(markup);
+        SimpleAttributeSet attrs= new SimpleAttributeSet();
+        StyleConstants.setForeground(attrs, Color.blue);
+        StyledDocument sdoc = output.getStyledDocument();  
+        sdoc.setCharacterAttributes(14, 29, attrs, false);  
+        sdoc.setCharacterAttributes(51,  7, attrs, false);  
+        sdoc.setCharacterAttributes(78, 28, attrs, false);  
+        sdoc.setCharacterAttributes(114, 7, attrs, false); 
+        
+        JScrollPane scrollPane = new JScrollPane(output);
+        
         //Add the text area to the content pane.
         contentPane.add(scrollPane, BorderLayout.CENTER);
         return contentPane;
+        
+    
+        
+        
+        
     }
     
  
