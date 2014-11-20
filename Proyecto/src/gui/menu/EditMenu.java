@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 public class EditMenu extends JMenu implements ActionListener {
 
@@ -97,7 +97,7 @@ public class EditMenu extends JMenu implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem item = (JMenuItem) e.getSource();
-		JTextArea textArea = EditorTabs.output;
+		JTextPane textArea = EditorTabs.output;
 		
 		// Selection indexes
 		int start = textArea.getSelectionStart();
