@@ -13,10 +13,11 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
-import javax.swing.text.Document;
+//import javax.swing.text.Document;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
+
 
 public class EditMenu extends JMenu implements ActionListener {
 
@@ -100,6 +101,7 @@ public class EditMenu extends JMenu implements ActionListener {
 		add(delete);
 	}
 
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem item = (JMenuItem) e.getSource();
@@ -111,17 +113,33 @@ public class EditMenu extends JMenu implements ActionListener {
 
 		String text = textArea.getText();
 
+		/*
 		Document doc = textArea.getDocument();
 		doc.addUndoableEditListener(new UndoableEditListener() {
-			
+
 			@Override
 			public void undoableEditHappened(UndoableEditEvent e) {
 				undoManager.addEdit(e.getEdit());
 			}
 		});
 
+		   textArea.getDocument().addUndoableEditListener(
+			        new UndoableEditListener() {
+			          public void undoableEditHappened(UndoableEditEvent e) {
+			            undoManager.addEdit(e.getEdit());
+			          }});
+		 */
+
+		textArea.getDocument().addUndoableEditListener(
+				new UndoableEditListener() {
+					public void undoableEditHappened(UndoableEditEvent e) {
+						undoManager.addEdit(e.getEdit());
+					}
+				});
+		
 		//Undo
-		if(item == undo)	
+		if(item == undo)
+
 			try {
 				if (undoManager.canUndo()) {
 					undoManager.undo();
