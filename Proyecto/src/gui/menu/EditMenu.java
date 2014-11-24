@@ -10,6 +10,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
 public class EditMenu extends JMenu implements ActionListener {
 
 	/**
@@ -25,6 +30,9 @@ public class EditMenu extends JMenu implements ActionListener {
 	private JMenuItem cut;
 	private JMenuItem delete;
 	private String clipboard;
+	
+
+	private UndoManager undoManager = new UndoManager();
 
 
 	public EditMenu() {
@@ -105,8 +113,38 @@ public class EditMenu extends JMenu implements ActionListener {
 		
 		String text = textArea.getText();
 		
+		textArea.getDocument().addUndoableEditListener(
+				new UndoableEditListener() {
+					public void undoableEditHappened(UndoableEditEvent e) {
+						undoManager.addEdit(e.getEdit());
+					}
+				});
+		
+		//Undo
+		if(item == undo)
+
+			try {
+				if (undoManager.canUndo()) {
+					undoManager.undo();
+				}
+			} catch (CannotUndoException exp) {
+				exp.printStackTrace();
+			}
+
+		//Redo
+		else if(item == redo)
+		{
+			try {
+				if (undoManager.canRedo()) {
+					undoManager.redo();
+				}
+			} catch (CannotRedoException exp) {
+				exp.printStackTrace();
+			}
+		}
+		
 		// Copy selected string
-		if (item == copy)			
+		else if (item == copy)			
 			clipboard = text.substring(start, end);
 			
 		// Paste string at cursor position
@@ -141,4 +179,5 @@ public class EditMenu extends JMenu implements ActionListener {
 		return newText.toString();
 	}
 }
+
 
