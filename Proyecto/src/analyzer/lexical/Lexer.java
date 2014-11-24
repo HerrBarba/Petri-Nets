@@ -1,5 +1,9 @@
 package analyzer.lexical;
 
+import gui.FileManager;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,7 +15,7 @@ public class Lexer {
 	private static final String regexCloseSlashTag = "/>";
 	private static final String regexEquals = "=";
 	private static final String regexAttr = "(name|id|color|time)";
-	private static final String regexPetriNet = "(Coloreada|P-T)";
+	private static final String regexPetriNet = "(Coloreada|P-T|Multinivel|Temporizada|Continua|Fluidificada)";
 	private static final String regexString = "\".*\"";
 	private static final String regexTag = "(Place|Transition)";
 	private static final String regexTab = "[(    )\t]*";
@@ -21,21 +25,25 @@ public class Lexer {
 	private static ArrayList<LexToken> lexTokens = new ArrayList<LexToken>();
 	private static ArrayList<Token> tokens = new ArrayList<Token>();
 	
-	private Lexer() {}
-	
-	static {
-		analyze();
-	}
-	
-	private static void analyze() {
-		/*Scanner s = null;
+	public static void analyze() {
+		lastMatchingTokens = new ArrayList<Token>();
+		lexTokens = new ArrayList<LexToken>();
+		tokens = new ArrayList<Token>();
+		
+		File file = FileManager.getFile();
+		Scanner s = new Scanner(System.in);
 		
 		try {
-			s = new Scanner(InternalFile.getFile());
+			s = new Scanner(file);
 		} catch (FileNotFoundException e) {
+			try {
+				file.createNewFile();
+				s = new Scanner(file);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
-		}*/
-		Scanner s = new Scanner(System.in);
+		}
 		
 		while (s.hasNextLine()) {
 			String line = s.nextLine() + '$';
@@ -55,10 +63,16 @@ public class Lexer {
 					lexeme += c;
 			}
 			
-			if (!lexeme.equals("$"))
+			if (!lexeme.equals("$")) {
 				tokens.add(Token.error);
+				lexeme = lexeme.substring(0, lexeme.length() - 1);
+				lexTokens.add(new LexToken(lexeme,Token.error));
+			}
+			
 			lexTokens.add(new LexToken("\n", Token.line));
 		}
+		
+		s.close();
 	}
 	
 	private static Token matches(String s) {
@@ -117,12 +131,12 @@ public class Lexer {
 		return tokens;
 	}
 	
-	public static ArrayList<LexToken> getLextokens() {
+	public static ArrayList<LexToken> getLexTokens() {
 		return lexTokens;
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(getLextokens());
+		System.out.println(getLexTokens());
 	}
 }
 

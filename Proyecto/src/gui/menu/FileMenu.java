@@ -1,5 +1,7 @@
 package gui.menu;
 
+import gui.FileManager;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -76,8 +78,41 @@ public class FileMenu extends JMenu implements ActionListener{
     }
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent ev) {
+		JMenuItem item = (JMenuItem) ev.getSource();
 		
+		// Open file
+		if (item == open) {
+			try {
+				
+				FileManager.open();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		}
+		
+		// Save file
+		else if (item == save) {
+			try {
+				FileManager.save();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// Save file as...
+		else if (item == saveAs) {
+			try {
+				FileManager.saveAs();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}	
+		
+		// Exit
+		else if (item == exit) {
+			System.exit(0);
+		}	
 	}
+
 }

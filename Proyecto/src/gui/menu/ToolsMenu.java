@@ -1,5 +1,8 @@
 package gui.menu;
 
+import gui.EditorTabs;
+import gui.FileManager;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -7,6 +10,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+
+import analyzer.Compiler;
 
 public class ToolsMenu extends JMenu implements ActionListener {
 
@@ -45,13 +50,20 @@ public class ToolsMenu extends JMenu implements ActionListener {
         options.addActionListener(this);
         add(options);
     }
-
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
     
 
-	
-
+	@Override
+	public void actionPerformed(ActionEvent ev) {
+		// TODO Auto-generated method stub
+		JMenuItem item = (JMenuItem) ev.getSource();
+		if (item == compile) {
+			try {
+				FileManager.save();
+				System.out.println(Compiler.compile());
+				EditorTabs.colorPane();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

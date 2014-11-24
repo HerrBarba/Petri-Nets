@@ -15,6 +15,7 @@ import javax.swing.JFrame;
  *
  */
 public class MainWindow {
+	public static JFrame frame;
 	
     /**
      * Create the GUI and show it.  For thread safety,
@@ -23,7 +24,7 @@ public class MainWindow {
      */
     private static void createAndShowGUI() {
         // Create and set up the window.
-        JFrame frame = new JFrame("Petrificate");
+        frame = new JFrame("Petrificate");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // Add tabbed pane to the window.
@@ -32,9 +33,7 @@ public class MainWindow {
         // Create and set up the menu.
         frame.setJMenuBar(new Menu());
         
-        
-
-        // Display the window
+         // Display the window
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
     }

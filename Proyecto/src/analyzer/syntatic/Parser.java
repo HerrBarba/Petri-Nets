@@ -49,8 +49,8 @@ public class Parser {
 		createTable();
 	}
 	
-	public static boolean parse(List<Token> tokens) {
-		if (tokens == null) return false;
+	public static String parse(List<Token> tokens) {
+		if (tokens == null) return "No text found";
 		
 		stack.add("money");
 		stack.add("S");
@@ -68,18 +68,19 @@ public class Parser {
 				stack.pop();
 				tokens.remove(0);
 			} else {
-				Production p = llTable.get(stack.pop() + tokens.get(0));				
-				if (p == null) return false;
+				Production p = llTable.get(stack.pop() + tokens.get(0));
+				if (p == null)
+					return tokens.get(0) + " was not expected";				
 				
 				String[] rhs = p.getRightHandSide();
 				
 				if (rhs[0].equals("&")) continue;
-				for (int i = rhs.length - 1; i >= 0; i--) {
-					stack.push(rhs[i]);
-				}
+				
+				for (int i = rhs.length - 1; i >= 0; i--)
+					stack.push(rhs[i]);				
 			}
 		}
 		
-		return true;
+		return null;
 	}
 }
