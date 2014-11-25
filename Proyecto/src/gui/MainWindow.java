@@ -3,6 +3,7 @@ package gui;
 import gui.menu.Menu;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
@@ -14,37 +15,30 @@ import javax.swing.JFrame;
  * @version 1.0
  *
  */
-public class MainWindow {
-	public static JFrame frame;
-	
+public class MainWindow extends JFrame {
+
     /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
-     */
-    private static void createAndShowGUI() {
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public void open() {
         // Create and set up the window.
-        frame = new JFrame("Petrificate");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Petrificate");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // Add tabbed pane to the window.
-        frame.add(new EditorTabs(), BorderLayout.CENTER);
+        add(new EditorTabs(), BorderLayout.CENTER);
         
         // Create and set up the menu.
-        frame.setJMenuBar(new Menu());
+        setJMenuBar(new Menu());
         
          // Display the window
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setVisible(true);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setSize(new Dimension(600, 400));
+		setPreferredSize(new Dimension(600, 400));
+		setMinimumSize(new Dimension(600, 600));
+        setVisible(true);
     }
- 
-    public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
+    
 }

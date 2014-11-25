@@ -1,52 +1,21 @@
 package analyzer.lexical;
 
-import gui.FileManager;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class Lexer {
-
-	private static final String regexOpenTag = "<";
-	private static final String regexCloseTag = ">";
-	private static final String regexOpenSlashTag = "</";
-	private static final String regexCloseSlashTag = "/>";
-	private static final String regexEquals = "=";
-	private static final String regexAttr = "(name|id|color|time)";
-	private static final String regexPetriNet = "(Coloreada|P-T|Multinivel|Temporizada|Continua|Fluidificada)";
-	private static final String regexString = "\".*\"";
-	private static final String regexTag = "(Place|Transition)";
-	private static final String regexTab = "[(    )\t]*";
-	private static final String regexWhitespace = "[ ]*";
+public abstract class Lexer {
+	private ArrayList<Token> lastMatchingTokens = new ArrayList<Token>();
+	private ArrayList<LexToken> lexTokens = new ArrayList<LexToken>();
+	private ArrayList<Token> tokens = new ArrayList<Token>();
 	
-	private static ArrayList<Token> lastMatchingTokens = new ArrayList<Token>();
-	private static ArrayList<LexToken> lexTokens = new ArrayList<LexToken>();
-	private static ArrayList<Token> tokens = new ArrayList<Token>();
-	
-	public static void analyze() {
+	public void analyze(String code) {
 		lastMatchingTokens = new ArrayList<Token>();
 		lexTokens = new ArrayList<LexToken>();
 		tokens = new ArrayList<Token>();
 		
-		File file = FileManager.getFile();
-		Scanner s = new Scanner(System.in);
+		String[] lines = code.split("\n");
 		
-		try {
-			s = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			try {
-				file.createNewFile();
-				s = new Scanner(file);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
-		
-		while (s.hasNextLine()) {
-			String line = s.nextLine() + '$';
+		for(String line: lines) {
+			line += '$';
 			String lexeme = "";
 			for (int i = 0; i < line.length(); i++) {
 				char c = line.charAt(i);
@@ -71,11 +40,9 @@ public class Lexer {
 			
 			lexTokens.add(new LexToken("\n", Token.line));
 		}
-		
-		s.close();
 	}
 	
-	private static Token matches(String s) {
+	private Token matches(String s) {
 		ArrayList<Token> tmp = tokenize(s);
 		Token token = null;
 		
@@ -87,57 +54,16 @@ public class Lexer {
 		
 		return token;
 	}
-	
-	private static ArrayList<Token> tokenize(String s) {
-		ArrayList<Token> tokens = new ArrayList<Token>();
-		
-		if (s.matches(regexOpenTag)) 
-			tokens.add(Token.openTag);
 
-		if (s.matches(regexCloseTag))
-			tokens.add(Token.closeTag);
-
-		if (s.matches(regexOpenSlashTag))
-			tokens.add(Token.openSlashTag);	
-		
-		if (s.matches(regexCloseSlashTag))
-			tokens.add(Token.closeSlashTag);			
-		
-		if (s.matches(regexEquals))
-			tokens.add(Token.equals);
-		
-		if (s.matches(regexAttr))
-			tokens.add(Token.attr);
-
-		if (s.matches(regexPetriNet))
-			tokens.add(Token.petriNet);
-		
-		if (s.matches(regexString))
-			tokens.add(Token.string);
-		
-		if (s.matches(regexTag))
-			tokens.add(Token.tag);
-
-		if (s.matches(regexTab))
-			tokens.add(Token.tab);
-		
-		if (s.matches(regexWhitespace))
-			tokens.add(Token.whitespace);
-		
+	public ArrayList<Token> getTokens() {
 		return tokens;
 	}
 	
-	public static ArrayList<Token> getTokens() {
-		return tokens;
-	}
-	
-	public static ArrayList<LexToken> getLexTokens() {
+	public ArrayList<LexToken> getLexTokens() {
 		return lexTokens;
-	}
+	}	
 	
-	public static void main(String[] args) {
-		System.out.println(getLexTokens());
-	}
+	protected abstract ArrayList<Token> tokenize(String s);
 }
 
 

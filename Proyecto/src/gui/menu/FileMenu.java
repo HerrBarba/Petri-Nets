@@ -1,6 +1,6 @@
 package gui.menu;
 
-import gui.FileManager;
+import filemanager.FileManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

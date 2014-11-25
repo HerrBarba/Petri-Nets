@@ -1,7 +1,8 @@
 package gui.menu;
 
+import filemanager.FileManager;
+import gui.Console;
 import gui.EditorTabs;
-import gui.FileManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +23,7 @@ public class ToolsMenu extends JMenu implements ActionListener {
 	private JMenuItem compile;
 	private JMenuItem run;
 	private JMenuItem options;
+	private JMenuItem clear;
 	
 	// Create "Tools" menu and add it to the JMenuBar
     public ToolsMenu() {
@@ -49,21 +51,30 @@ public class ToolsMenu extends JMenu implements ActionListener {
         options.setMnemonic(KeyEvent.VK_O);
         options.addActionListener(this);
         add(options);
+        
+        // Clear console item
+        clear = new JMenuItem("Limpiar Consola");
+        clear.addActionListener(this);
+        add(clear);
     }
     
 
 	@Override
 	public void actionPerformed(ActionEvent ev) {
-		// TODO Auto-generated method stub
 		JMenuItem item = (JMenuItem) ev.getSource();
+		
 		if (item == compile) {
 			try {
 				FileManager.save();
-				System.out.println(Compiler.compile());
+				Compiler.compile();
 				EditorTabs.colorPane();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		
+		else if (item == clear) {
+			Console.clear();
 		}
 	}
 }

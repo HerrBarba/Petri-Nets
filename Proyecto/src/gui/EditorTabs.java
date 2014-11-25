@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
@@ -16,70 +17,109 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import utils.ColorUtils;
+import analyzer.Compiler;
 
 public class EditorTabs extends JPanel implements DocumentListener {
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = -2655671622457927372L;
-	public static JTextPane output;
+	public static JTextPane xmlPane;
+	public static JTextPane globalPane;
 	private static JTabbedPane tabbedPane;
+	public static final int CODE = 1, GLOBAL = 0;
+	private final static String[] titles = {"Global", "Código", "Gráfico"};
+	public final static String CODE_SEPARATOR = "<EndOfGlobal>";
 	
 	public EditorTabs() {
         super(new GridLayout(1, 1));
          
         tabbedPane = new JTabbedPane();
-        ImageIcon icon = null;// = createImageIcon("images/middle.gif");
-         
-        JComponent codePanel = makeTextPanel();
-        tabbedPane.addTab("Código", icon, codePanel,
-                "Code here...");
+
+        // Create global functions and variables pane
+        globalPane = new JTextPane();
+        tabbedPane.addTab(titles[0], null, makeTextPanel(globalPane),
+                "Global functions and variables here...");
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_G);
+        
+        // Create code pane
+        xmlPane = new JTextPane();
+        tabbedPane.addTab(titles[1], null, makeTextPanel(xmlPane),
+                "XML definition here...");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_C);
-         
+        
+        // Create graph tab
         JComponent graphPanel = makeGraphPanel("Gráfico");
-        tabbedPane.addTab("Gráfico", icon, graphPanel,
-                "Modify your petri net...");
+        tabbedPane.addTab(titles[2], null, graphPanel,
+                "Graphic representation...");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_G);
                  
-        //Add the tabbed pane to this panel.
-        add(tabbedPane);
-         
         //The following line enables to use scrolling tabs.
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.setPreferredSize(new Dimension(tabbedPane.getWidth(), 800));
+        //Add the tabbed pane to this 
+        setLayout(new BorderLayout());
+        add(tabbedPane, BorderLayout.CENTER);
+        add(Console.pane, BorderLayout.PAGE_END);
+        
     }
-     
-    private JComponent makeTextPanel() {
+    
+	private JPanel makeTextPanel(JTextPane pane) {
         //Create the content-pane-to-be.
         JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.setOpaque(true);
 
         //Create a scrolled text area.
-        output = new JTextPane();
-        output.setEditable(true);
-        output.setBackground(Color.BLACK);
-        output.setForeground(Color.WHITE);
-        output.setCaretColor(Color.WHITE);
-        output.setFont(new Font(Font.DIALOG, Font.PLAIN, 14));
-        output.getStyledDocument().addDocumentListener(this);
+        pane.setEditable(true);
+        pane.setBackground(Color.BLACK);
+        pane.setForeground(Color.WHITE);
+        pane.setCaretColor(Color.WHITE);
+        pane.setFont(new Font(Font.DIALOG, Font.PLAIN, 14));
+        pane.getStyledDocument().addDocumentListener(this);
         
-        JScrollPane scrollPane = new JScrollPane(output);
+        JScrollPane scrollPane = new JScrollPane(pane);
         
         //Add the text area to the content pane.
         contentPane.add(scrollPane, BorderLayout.CENTER);
-        return contentPane;        
+        return contentPane;
     }
+
+	public static String getCode() {
+		return globalPane.getText() + "\n" + CODE_SEPARATOR
+				+ "\n" + xmlPane.getText();
+	}	
+	
+	public static void setCode(String code) {
+		String[] codes = code.split("<EndOfGlobal>");
+		globalPane.setText(codes[0].trim());
+		xmlPane.setText(codes[1].trim());
+	}
+
+	public static JTextPane getCurrentPane() {
+    	switch(tabbedPane.getSelectedIndex()) {
+			case CODE:
+				return xmlPane;
+			case GLOBAL:
+				return globalPane;
+			default:
+				return null;
+    	}
+	}
  
     public static void colorPane() {
-        ColorUtils.colorTextPane(output);
+		ColorUtils.colorTextPane(xmlPane, Compiler.xmlLexer);
+		ColorUtils.colorTextPane(globalPane, Compiler.globalLexer);
         resetTitle();
     }
     
     public static void resetTitle() {
-    	tabbedPane.setTitleAt(0, "Código");
+		tabbedPane.setTitleAt(0, titles[0]);
+		tabbedPane.setTitleAt(1, titles[1]);
     }
     
     public static boolean hasChanges() {
-    	return tabbedPane.getTitleAt(0).charAt(0) == '*';
+    	return tabbedPane.getTitleAt(0).charAt(0) == '*' ||
+    			tabbedPane.getTitleAt(1).charAt(0) == '*';
     }
     
     private JComponent makeGraphPanel(String text) {
@@ -112,11 +152,16 @@ public class EditorTabs extends JPanel implements DocumentListener {
 
 	@Override
 	public void insertUpdate(DocumentEvent arg0) {
-		tabbedPane.setTitleAt(0, "*Código");
+		changeTitle();
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent arg0) {
-		tabbedPane.setTitleAt(0, "*Código");
+		changeTitle();
+	}
+	
+	private void changeTitle() {
+		int index = tabbedPane.getSelectedIndex();
+		tabbedPane.setTitleAt(index, "*" + titles[index]);
 	}
 }

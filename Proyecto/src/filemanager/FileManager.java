@@ -1,4 +1,7 @@
-package gui;
+package filemanager;
+
+import gui.Console;
+import gui.EditorTabs;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +17,7 @@ public class FileManager {
 	private static String path = ".";
 	private static String filename = "tmp";
 	private final static String fileExtension = ".pet";
-	
+	private final static String separator = File.separator;
 	static { newFile(); }
 	
 	public static void newFile() {
@@ -30,12 +33,13 @@ public class FileManager {
 
 	
 	public static File getFile() {
-		return new File(path + "\\" + filename);
+		return new File(path + separator + filename);
 	}
 		
 	private static void readFile() throws IOException {
-		FileReader fr = new FileReader(path + "\\" + filename);
-		BufferedReader br = new BufferedReader(fr);		
+		FileReader fr = new FileReader(path + separator + filename);
+		BufferedReader br = new BufferedReader(fr);
+		
 		StringBuilder text = new StringBuilder();
 		String line = br.readLine();
 		
@@ -45,19 +49,19 @@ public class FileManager {
 		}			
 		
 		br.close();
-		
-		EditorTabs.output.setText(text.toString());
+
+		EditorTabs.setCode(text.toString());
 		EditorTabs.resetTitle();
 		
-		System.out.println("Opened " + path + "\\" + filename + " succesfully.");
+		Console.println("Opened " + path + separator + filename + " succesfully.");
 	}
 	
 	private static void saveFile(String file) throws Exception {
 		PrintWriter writer = new PrintWriter(file);
-		writer.print(EditorTabs.output.getText());		
+		writer.print(EditorTabs.getCode());
 		writer.close();
 		EditorTabs.resetTitle();
-		System.out.println("Saved " + file + " succesfully.");
+		Console.println("Saved " + file + " succesfully.");
 	}
 	
 	public static void open() throws IOException {
@@ -66,7 +70,7 @@ public class FileManager {
 		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         fc.setFileFilter(new FileNameExtensionFilter("petrified files (*.pet)", "pet"));
         
-		int result = fc.showOpenDialog(MainWindow.frame);
+		int result = fc.showOpenDialog(null);
 
 		if (result == JFileChooser.APPROVE_OPTION) {
 			path = fc.getCurrentDirectory().toString();
@@ -79,7 +83,7 @@ public class FileManager {
 		if (path.equals(".") && filename.equals("tmp"))
 			saveAs();
 		else
-			saveFile(path + "\\" + filename);
+			saveFile(path + separator + filename);
 	}
 
 	public static void saveAs() throws Exception {
@@ -87,18 +91,18 @@ public class FileManager {
 		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         fc.setFileFilter(new FileNameExtensionFilter("petrified files (*.pet)", "pet"));
         
-		int result = fc.showSaveDialog(MainWindow.frame);
+		int result = fc.showSaveDialog(null);
 
 		if (result == JFileChooser.APPROVE_OPTION) {
 			path = fc.getCurrentDirectory().toString();
 			filename = fc.getSelectedFile().getName();
-			saveFile(path + "\\" + filename + fileExtension);
+			saveFile(path + separator + filename + fileExtension);
 		}
 	}
 	
 	public static boolean confirmSaveDialog() {
 		if (!EditorTabs.hasChanges()) return true;
-		int reply = JOptionPane.showConfirmDialog(MainWindow.frame, 
+		int reply = JOptionPane.showConfirmDialog(null, 
 				"Quieres guardar los cambios");
 		if (reply == JOptionPane.OK_OPTION)
 			try {

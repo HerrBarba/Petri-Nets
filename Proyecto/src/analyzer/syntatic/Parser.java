@@ -6,27 +6,17 @@ import java.util.Stack;
 
 import analyzer.lexical.Token;
 
-public class Parser {
-
+public abstract class Parser {
 	private static Stack<String> stack = new Stack<String>();
-	private static HashMap<String, Production> llTable = new HashMap<String, Production>();
-	private Parser() {}
+	protected static HashMap<String, Production> llTable = new HashMap<String, Production>();
 	
-	private static void createTable() {
-		llTable.put("SopenTag", new Production("S", new String[] {"S'", "S"}));
-		llTable.put("S'openTag", new Production("S'", new String[] {"openTag", "T", "A", "E"}));
-		llTable.put("EcloseTag", new Production("E", new String[] {"closeTag", "S", "openSlashTag", "T", "closeTag"}));
-		llTable.put("AcloseTag", new Production("A", new String[] {"&"}));
-		llTable.put("SopenSlashTag", new Production("S", new String[] {"&"}));		
-		llTable.put("EcloseSlashTag", new Production("E", new String[] {"closeSlashTag"}));		
-		llTable.put("AcloseSlashTag", new Production("A", new String[] {"&"}));		
-		llTable.put("TpetriNet", new Production("T", new String[] {"petriNet"}));		
-		llTable.put("Ttag", new Production("T", new String[] {"tag"}));		
-		llTable.put("Aattr", new Production("A", new String[] {"attr", "equals", "string", "A"}));
-		llTable.put("Smoney", new Production("S", new String[] {"&"}));
-	}
+	protected abstract void createTable();
 	
-	private static class Production {
+	public Parser() {
+		createTable();
+	}	
+	
+	protected static class Production {
 		private String leftHandSide;
 		private String[] rightHandSide;
 		
@@ -45,11 +35,7 @@ public class Parser {
 		}
 	}
 	
-	static {
-		createTable();
-	}
-	
-	public static String parse(List<Token> tokens) {
+	public String parse(List<Token> tokens) {
 		if (tokens == null) return "No text found";
 		
 		stack.add("money");

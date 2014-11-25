@@ -14,8 +14,8 @@ import analyzer.lexical.Token;
 
 public class ColorUtils {
 
-	public static void colorTextPane(JTextPane pane) {
-        ArrayList<LexToken> lextokens = Lexer.getLexTokens();
+	public static void colorTextPane(JTextPane pane, Lexer lexer) {
+        ArrayList<LexToken> lextokens = lexer.getLexTokens();
         StringBuilder text = new StringBuilder();
         ArrayList<WordToColor> words = new ArrayList<WordToColor>();
         

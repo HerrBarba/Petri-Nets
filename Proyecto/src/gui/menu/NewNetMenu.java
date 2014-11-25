@@ -1,7 +1,7 @@
 package gui.menu;
 
+import filemanager.FileManager;
 import gui.EditorTabs;
-import gui.FileManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JTextPane;
 
 public class NewNetMenu extends JMenu implements ActionListener{
 
@@ -87,7 +88,9 @@ public class NewNetMenu extends JMenu implements ActionListener{
 	
 	private void newNet(String net) {
 		if (!FileManager.confirmSaveDialog()) return;
-		EditorTabs.output.setText(net);
+		JTextPane pane = EditorTabs.getCurrentPane();
+		if (pane == null) return;
+		pane.setText(net);
 		FileManager.newFile();
 	}	
 }

@@ -105,7 +105,7 @@ public class EditMenu extends JMenu implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem item = (JMenuItem) e.getSource();
-		JTextPane textArea = EditorTabs.output;
+		JTextPane textArea = EditorTabs.getCurrentPane();
 		
 		// Selection indexes
 		int start = textArea.getSelectionStart();
