@@ -1,6 +1,11 @@
 package analyzer.syntatic;
 
 public class GlobalParser extends Parser {
+	protected final static String[] firstOfS = {};
+	
+	protected String[] getFirstOfS() {
+		return firstOfS;
+	}
 	
 	protected void createTable() {
 		llTable.put("SopenTag", new Production("S", new String[] {"S'", "S"}));

@@ -25,6 +25,10 @@ public class Console {
 	
 	public static void println(String text) {
 		out.setText(out.getText() + text + "\n");
+	}	
+	
+	public static void print(String text) {
+		out.setText(out.getText() + text);
 	}
 	
 	public static void clear() {

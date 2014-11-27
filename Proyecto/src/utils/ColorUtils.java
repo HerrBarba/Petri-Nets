@@ -45,6 +45,7 @@ public class ColorUtils {
 	
     private static Color colorWord(Token token) {
     	switch (token){
+    		case equals:
     		case openTag:
     		case closeTag:
     		case openSlashTag:
@@ -61,7 +62,7 @@ public class ColorUtils {
     		case error:
     			return Color.RED;
     		default:
-    			return Color.BLACK;
+    			return Color.GRAY;
     	}
     }
     

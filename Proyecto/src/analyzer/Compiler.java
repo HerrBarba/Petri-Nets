@@ -3,6 +3,7 @@ package analyzer;
 import gui.Console;
 import gui.EditorTabs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import analyzer.lexical.GlobalLexer;
@@ -24,30 +25,33 @@ public class Compiler {
 	private static void compileGlobal(String code) {		
 		GlobalParser parser = new GlobalParser();
 		globalLexer.analyze(code);
-
+		
 		Console.println("\nCompiling global functions...");
 		
-		List<Token> tokens = globalLexer.getTokens();
-		String error = "Object not recognized";
-		if (tokens.contains(Token.error)) Console.println(error);
+		List<Token> tokens =  new ArrayList<Token>(globalLexer.getTokens());
+		if (tokens.contains(Token.error))
+			Console.println("Object not recognized.");
 		
-		error = parser.parse(tokens);
-		if (error != null) Console.println(error);
-		else Console.println("Compiled Successfully");
+		
+		parser.parse(tokens, globalLexer);		
+		Console.println(globalLexer.hadSuccess()?
+				"Compiled successfully.": "Could not compile.");
 	}
 		
 	private static void compileCode(String code) {
 		XMLParser parser = new XMLParser();
 		xmlLexer.analyze(code);
-
+		
 		Console.println("\nCompiling xml definition...");
 		
-		List<Token> tokens = xmlLexer.getTokens();
-		String error = "Object not recognized";
-		if (tokens.contains(Token.error)) Console.println(error);
+		List<Token> tokens = new ArrayList<Token>(xmlLexer.getTokens());
+		String error = "Object not recognized.";
+		if (tokens.contains(Token.error))
+			Console.println(error);
 		
-		error = parser.parse(tokens);
-		if (error != null) Console.println(error);
-		else Console.println("Compiled Successfully");
+		parser.parse(tokens, xmlLexer);
+
+		Console.println(xmlLexer.hadSuccess()?
+				"Compiled successfully.": "Could not compile.");
 	}
 }
