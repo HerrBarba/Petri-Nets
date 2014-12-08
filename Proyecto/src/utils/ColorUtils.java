@@ -45,19 +45,41 @@ public class ColorUtils {
 	
     private static Color colorWord(Token token) {
     	switch (token){
+    		case opComp:
+    		case opSum:
+    		case opMinus:
+    		case opMult:
     		case equals:
     		case openTag:
     		case closeTag:
     		case openSlashTag:
     		case closeSlashTag:
-    			return Color.MAGENTA;
+    			return Color.PINK;
     		case tag:
+    		case id:
     			return Color.CYAN;
     		case petriNet:
     			return Color.ORANGE;
     		case attr:
-    			return Color.PINK;
+    		case type:
+    		case If:
+    		case While:
+    		case Switch:
+    		case For:
+    		case Case:
+    		case Default:
+    		case Break:
+    		case func:
+    			return Color.MAGENTA;
     		case string:
+    		case num:
+    		case openPar:
+    		case closePar:
+    		case openCurly:
+    		case closeCurly:
+    		case semi:
+    		case colon:
+    		case comma:
     			return Color.WHITE;
     		case error:
     			return Color.RED;

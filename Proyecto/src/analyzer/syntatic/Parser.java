@@ -12,11 +12,18 @@ import analyzer.lexical.Lexer;
 import analyzer.lexical.Token;
 
 public abstract class Parser {
-	private static Stack<String> stack = new Stack<String>();
+	protected static Stack<String> stack = new Stack<String>();
+	protected static Stack<String> tagStack = new Stack<String>();
 	protected static HashMap<String, Production> llTable = new HashMap<String, Production>();
 	protected abstract String[] getFirstOfS();
 	protected abstract void createTable();
 	private HashSet<String> tokenValues;
+	
+	protected abstract void nextProduction(List<Token> tokens, Lexer lexer);
+	protected abstract void evaluateToken(List<Token> tokens, Lexer lexer);
+	
+	int line = 1;
+	int token = 0;
 	
 	public Parser() {
 		createTable();
@@ -31,11 +38,11 @@ public abstract class Parser {
 			this.rightHandSide = rightHandSide;
 		}
 		
-		private String getLeftHandSide() {
+		protected String getLeftHandSide() {
 			return leftHandSide;
 		}
 		
-		private String[] getRightHandSide() {
+		protected String[] getRightHandSide() {
 			return rightHandSide;
 		}
 		
@@ -52,78 +59,55 @@ public abstract class Parser {
 		tokens.add(Token.money);
 		//String coincidences = "";
 		
-		int line = 1;
-		int token = 0;
 		
 		while (!tokens.isEmpty()) {
 			System.out.println("Input: " + tokens);//.toString().replaceAll("[\\[\\], ]", "") + "\t\t");
 			System.out.println("Stack: " + stack);//.toString().replaceAll("[\\[\\], ]", "") + "\t\t");
-			//System.out.println("Coincidences" + coincidences);
-			
+			//System.out.println("TagStack: " + tagStack);//.toString().replaceAll("[\\[\\], ]", "") + "\t\t");
+
 			// Reset stack
-			if (stack.peek().equals("money") && tokens.get(0) != Token.money) {
-				stack.add("S");
-				while (!isInFirstOfS(tokens.get(0))) {
-					Token t = tokens.remove(0);
-					if (t == Token.line) line++;
-					if (t != Token.whitespace && t != Token.tab 
-							&& t != Token.line)
-						Console.println("Line " + line + ": \"" + 
-							lexer.tokenToString(t) + "\" was not expected.");
-					
-					lexer.setErrorToken(token++);
-				}
-				continue;
-			}
+			if (resetStack(tokens, lexer)) continue;
 			
-			if (tokens.get(0) == Token.whitespace || tokens.get(0) == Token.tab 
-					|| tokens.get(0) == Token.error) {
-				tokens.remove(0);
-				token++; 
-				continue;
-			}			
-			
-			if (tokens.get(0) == Token.line) {
-				tokens.remove(0);
-				line++;
-				token++;
-				continue;
-			}
-			
-			
-			if (isToken(stack.peek())) {
-				String s = stack.pop();
-				if (s.equals(tokens.get(0).toString())) {
+			switch (tokens.get(0)) {
+				case line:
+					line++;
+				case whitespace:
+				case tab:
+				case error:
 					tokens.remove(0);
 					token++;
-				} else {
-					Console.println("Line " + line + ": Missing \"" + 
-							lexer.tokenToString(Token.valueOf(s)) + "\".");
-					lexer.setMissingToken(Token.valueOf(s), token++);
-				}
-			} else {
-				Production p = llTable.get(stack.peek() + tokens.get(0));
-				if (p == null) {
-					Console.println("Line " + line + ": \"" +
-							lexer.tokenToString(tokens.remove(0)) + "\" was not expected.");
-					lexer.setErrorToken(token++);
 					continue;
-				}
-				stack.pop();								
-
-				String lhs = p.getLeftHandSide();
-				if (lhs.equals("sync"))	continue;
-				
-				String[] rhs = p.getRightHandSide();
-				if (rhs[0].equals("&")) continue;
-
-				for (int i = rhs.length - 1; i >= 0; i--)
-					stack.push(rhs[i]);
+				default:
+					break;
+			}
+						
+			if (isToken(stack.peek())) {
+				evaluateToken(tokens, lexer);
+			} else {
+				nextProduction(tokens, lexer);
 			}
 		}
 	}
 	
-	private boolean isInFirstOfS(Token token) {
+	protected boolean resetStack(List<Token> tokens, Lexer lexer) {
+		if (stack.peek().equals("money") && tokens.get(0) != Token.money) {
+			stack.add("S");
+			while (!isInFirstOfS(tokens.get(0))) {
+				Token t = tokens.remove(0);
+				if (t == Token.line) line++;
+				if (t != Token.whitespace && t != Token.tab
+						&& t != Token.line)
+					Console.println("Line " + line + ": \"" + 
+						lexer.tokenToString(t) + "\" was not expected.");
+				
+				lexer.setErrorToken(token++);
+			}
+			return true;
+		}		
+		return false;
+	}
+	
+	protected boolean isInFirstOfS(Token token) {
 		String[] firstOfS = getFirstOfS();
 		if (token == Token.money) return true;
 		
@@ -132,8 +116,8 @@ public abstract class Parser {
 
 		return false;
 	}
-	
-	public boolean isToken(String s) {
+		
+	protected boolean isToken(String s) {
 		if (tokenValues != null)
 			return tokenValues.contains(s);
 		

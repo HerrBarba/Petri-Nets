@@ -3,9 +3,11 @@ package gui.menu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 
 public class HelpMenu extends JMenu implements ActionListener {
@@ -46,38 +48,38 @@ public class HelpMenu extends JMenu implements ActionListener {
 			if(((JMenuItem)e.getSource()) == about)
 			{
 
-				JOptionPane.showMessageDialog(about,
-                  	    "\nProyecto Procesadores de Lenguaje\n\n" +
-                  	    "\t\t\t\t\t\t\t\t\tProyecto: Redes de Petri\n\n" +
-                  	    "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tVersion 1.0\n\n\n\n" +
+				JOptionPane.showMessageDialog(about, new JTextArea(
+                  	    "\nMateria: Procesadores de Lenguaje\n\n" +
+                  	    "\tProyecto: Redes de Petri\n\n" +
+                  	    "\tVersion 1.0\n\n\n\n" +
                   	    "Intregrantes:\n\n" +
-                  	    "\t\t\tJorge Barba\n" +
-                  	    "\t\t\tAlejandro Mijares\n" +
-                  	    "\t\t\tRodrigo Fornos\n" +
-                  	    "\t\t\tJesÃºs Pegueros\n",
+                  	    "\tJorge Barba\n" +
+                  	    "\tAlejandro Mijares\n" +
+                  	    "\tRodrigo Fornos\n" +
+                  	    "\tJesús Pegueros\n"),
                   	    "Acerca",
                   	    JOptionPane.PLAIN_MESSAGE);
 			}
 			else if(((JMenuItem)e.getSource()) == faqs){
-				JOptionPane.showMessageDialog(faqs,
+				JOptionPane.showMessageDialog(faqs, new JTextArea(
                   	    "\nPreguntas Frecuentes\n\n" +
-                  	    "1. Â¿QuÃ© es una Red de Petri?\n" +
-                  	    "\t\t\t\tUna Red de Petri es una representaciÃ³n matemÃ¡tica o grÃ¡fica de un sistema a eventos discretos en el cual\n" +
-                  	    "\t\t\t\tse puede describir la topologÃ­a de un sistema distribuido, paralelo o concurrente.\n\n" +
-                  	    "2. Â¿En que Ã¡reas se pueden aplicar Redes de Petri?\n" +
+                  	    "1. ¿Qué es una Red de Petri?\n" +
+                  	    "\t\t\t\tUna Red de Petri es una representación matemática o gráfica de un sistema a eventos discretos en el cual\n" +
+                  	    "\t\t\t\tse puede describir la topología de un sistema distribuido, paralelo o concurrente.\n\n" +
+                  	    "2. ¿En que áreas se pueden aplicar las Redes de Petri?\n" +
                   	    "\t\t\t\tSe pueden aplicar en:\n" +
-                  	    "\t\t\t\t\t\t\t\tAnalisis de Datos\n" +
-                  	    "\t\t\t\t\t\t\t\tDiseÃ±o de Software\n" +
-                  	    "\t\t\t\t\t\t\t\tFiabilidad\n" +
-                  	    "\t\t\t\t\t\t\t\tFlujo de trabajo\n" +
-                  	    "\t\t\t\t\t\t\t\tProgramaciÃ³n concurrente\n",
+                  	    "\t\t\t\t\t\t\t\t-Analisis de Datos\n" +
+                  	    "\t\t\t\t\t\t\t\t-Diseño de Software\n" +
+                  	    "\t\t\t\t\t\t\t\t-Fiabilidad\n" +
+                  	    "\t\t\t\t\t\t\t\t-Flujo de trabajo\n" +
+                  	    "\t\t\t\t\t\t\t\t-Programación concurrente\n"),
                   	    "FAQ's",
                   	    JOptionPane.PLAIN_MESSAGE);
 			}
 			else if(((JMenuItem)e.getSource()) == version){
-				JOptionPane.showMessageDialog(version,
+				JOptionPane.showMessageDialog(version,new JTextArea(
                   	    "\n\t\t\t\t\t\t\t\t\tProyecto Redes de Petri\n\n" +
-                  	    "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tVersion 1.0\n",
+                  	    "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tVersion 1.0\n"),
                   	    "Version",
                   	    JOptionPane.PLAIN_MESSAGE);	        
 	}

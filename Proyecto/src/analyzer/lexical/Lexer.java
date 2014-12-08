@@ -6,12 +6,13 @@ public abstract class Lexer {
 	private ArrayList<Token> lastMatchingTokens;
 	private ArrayList<LexToken> lexTokens;
 	private ArrayList<Token> tokens;
-	private boolean success = true;
+	private boolean success;
 	
 	public void analyze(String code) {
 		lastMatchingTokens = new ArrayList<Token>();
 		lexTokens = new ArrayList<LexToken>();
 		tokens = new ArrayList<Token>();
+		success = true;
 		
 		String[] lines = code.split("\n");
 		
@@ -82,6 +83,10 @@ public abstract class Lexer {
 		lexTokens.add(index, new LexToken(lexeme, Token.missing));
 		tokens.add(index, Token.missing);
 		success = false;
+	}
+	
+	public String getLexemeAt(int index) {
+		return lexTokens.get(index).getLexeme();
 	}
 	
 	public String tokenToString(Token token) {
